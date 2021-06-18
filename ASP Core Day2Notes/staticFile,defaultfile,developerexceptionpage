@@ -1,0 +1,118 @@
+Add wwwrootfolder.
+
+add htmlpage ==> index.html
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    <h2> Hello from index.html file</h2>
+</body>
+</html>
+----------------------------------
+ startup.cs
+=============
+app.UseDefaultFiles();
+
+run
+=====
+http:localhost:portnumber
+========================
+it will diplay the Content of index.html 
+
+=====================================================================
+change custom webpage as default.html
+===================================
+create home.html
+-----------
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+
+    <h1>  Hello from Custom web Page</h1>
+</body>
+</html>
+=========================================
+
+public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+            DefaultFilesOptions defaultFilesOptions = new DefaultFilesOptions();
+            defaultFilesOptions.DefaultFileNames.Clear();
+            defaultFilesOptions.DefaultFileNames.Add("Home.html");
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+           
+            app.UseDefaultFiles(defaultFilesOptions);
+            app.UseStaticFiles();
+            app.UseRouting();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapGet("/", async context =>
+                {
+                    // await context.Response.WriteAsync(System.Diagnostics.Process.GetCurrentProcess().ProcessName);
+                    // await context.Response.WriteAsync(_configuration["MyKey"]);
+                    await context.Response.WriteAsync("Hello world");
+                });
+            });
+        }
+    }
+}
+----------------------------------------------------------------
+DeveloperExceptionPage Middleware
+------------------------------------
+public void Configure(IApplicationBuilder app, IWebHostEnvironment env,ILogger<Startup> logger)
+        {
+            DefaultFilesOptions defaultFilesOptions = new DefaultFilesOptions();
+            defaultFilesOptions.DefaultFileNames.Clear();
+            defaultFilesOptions.DefaultFileNames.Add("Home.html");
+            if (env.IsDevelopment())
+            {
+                DeveloperExceptionPageOptions exceptionPageOptions = new DeveloperExceptionPageOptions
+                {
+                    SourceCodeLineCount = 5
+                };
+
+                app.UseDeveloperExceptionPage(exceptionPageOptions);
+            }
+           
+            //app.UseDefaultFiles(defaultFilesOptions);
+           // app.UseStaticFiles();
+ 		app.UseFileServer(); // combination of defaultfiles and staticfiles middleware
+            app.UseRouting();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapGet("/", async context =>
+                {
+                    // await context.Response.WriteAsync(System.Diagnostics.Process.GetCurrentProcess().ProcessName);
+                    // await context.Response.WriteAsync(_configuration["MyKey"]);
+                    throw new Exception("Some srror occured while processing your request");
+                    await context.Response.WriteAsync("Hello world");
+                });
+            });
+=======================================================================
+CLI commands:
+-------------
+if u dont have vs2019
+.
+install  any text editor(vs code,sublime,atom) and .net SDK 
+
+after installd
+
+check the version
+cmd == > dotnet --version
+
+create onefolder for consoleapp==> in cmd give the path of folder
+
+to create a new console app
+
+dotnet new console
