@@ -1,0 +1,137 @@
+1. create project with ASp.NET Core MVC app==> MVCDemo1
+2. under the Model We have added 2 classes and 1 interface
+Employee.Cs
+---------------
+public class Employee
+    {
+        public int Id { get; set; }
+
+        public string Name { get; set; }
+
+        public string Department { get; set; }
+    }
+============================================
+IEmployeeRepository.cs
+----------------------
+ public interface IEmployeeRepository
+    {
+        Employee GetEmployeeById(int id);
+        void Save(Employee employee);
+        List<Employee> GetEmployees();
+    }
+======================================================
+EmployeeRepository.cs
+----------------------
+public class EmployeeRepository : IEmployeeRepository
+    {
+        public List<Employee> employees = new List<Employee>();
+        public EmployeeRepository()
+        {
+            Employee emp1 = new Employee(){ Id=1, Name="Saahil",Department="HR"};
+            Employee emp2 = new Employee() { Id = 2, Name = "Asritha", Department = "Accounts" };
+            Employee emp3 = new Employee() { Id = 3, Name = "Akansha", Department = "IT" };
+            employees.Add(emp1);
+            employees.Add(emp2);
+            employees.Add(emp3);
+        }
+        public Employee GetEmployeeById(int id)
+        {
+            Employee emp= employees.Find(e => e.Id==id);
+            return emp;
+        }
+
+        public List<Employee> GetEmployees()
+        {
+            return employees;
+        }
+
+        public void Save(Employee employee)
+        {
+           // throw new NotImplementedException();
+        }
+    }
+==========================================================================
+Add Mvc Controler empty
+-----------------------
+using MVCDemo1.Models;
+
+namespace MVCDemo1.Controllers
+{
+ 
+    public class EmployeeController : Controller
+    {
+        private IEmployeeRepository _employeeRepository;
+        public EmployeeController(IEmployeeRepository employeeRepository)
+        {
+            _employeeRepository = employeeRepository;
+
+        }
+        public IActionResult Index()
+        {
+            return View(_employeeRepository.GetEmployees());
+        }
+    }
+}
+
+=================================================================
+Rightclick on Index method ==> Add MVC empty View.
+
+index.cshtml
+-------------
+
+  @model IEnumerable<MVCDemo1.Models.Employee>
+<table border="1">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Department</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var emp in Model)
+	{
+	
+            <tr>
+                <td>@emp.Id</td>
+                <td>@emp.Name</td>
+                <td>@emp.Department.</td>
+            </tr>
+	}
+    </tbody>
+</table>
+
+===================================================================
+Goto views==> Shared folder==> _Layout.cshtml:
+
+we are adding one link for employee
+<li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        </li>
+-----------------------------------------------------------------
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Employee" asp-action="Index">Employee</a>
+                        </li>
+-----------------------------------------------------------------------------
+Startup.cs
+===========
+
+within Configureservice method add below code:
+  public void ConfigureServices(IServiceCollection services)
+        {
+       
+            services.AddControllersWithViews();
+-------------------------------------------------------------------------------------------------------------
+            services.AddSingleton<IEmployeeRepository, EmployeeRepository>();
+-------------------------------------------------------------------------------------------------------
+          
+        }
+
+============================================================
+ Run the Project :
+------------------------
+ Click on Employee link it will show the list Employee details.
+================================================================
+
+
+
