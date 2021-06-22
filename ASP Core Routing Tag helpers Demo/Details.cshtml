@@ -1,0 +1,17 @@
+﻿@model MVCDemo1.Models.Employee
+@{
+}
+
+<h2> Employee details View
+    </h2>
+
+    <img src="~/girl.jpg"  asp-append-version="true" />
+    <div> @Model.Name</div>
+    <div>@Model.Department</div>
+
+<a asp-controller="Employee" asp-action="Index">Goto Index</a>
+<a href="#" class="btn btn-primary m-1"> List</a>
+<a href="#" class="btn btn-success m-1"> List</a>
+
+
+
